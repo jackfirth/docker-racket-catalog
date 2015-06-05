@@ -1,6 +1,7 @@
 #lang racket
 
-(require spin)
+(require spin
+         fancy-app)
 
 (define foo-pkg-details
   (hasheq 'source "git://github.com/foo/foo"
@@ -17,7 +18,9 @@
 
 (get "/" (thunk-print "hi"))
 
-(get "/pkgs" (thunk-print (~s '("foo"))))
+(define get-pkgs (get "/pkgs" _))
+
+(get-pkgs (thunk-print (~s '("foo"))))
 
 (get "/pkg/foo" (thunk-print (~s foo-pkg-details)))
 
