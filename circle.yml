@@ -8,7 +8,7 @@ dependencies:
 
 test:
   override:
-    - docker-compose run test
+    - docker-compose run integrationtest
 
 deployment:
   production:
