@@ -1,0 +1,20 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - sudo pip install -U docker-compose
+
+test:
+  override:
+    - docker-compose run test
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - echo $TUTUM_REGISTRY_USER
+      - docker login --username="$TUTUM_REGISTRY_USER" --email="$TUTUM_REGISTRY_EMAIL" --password="$TUTUM_REGISTRY_PASSWORD" tutum.co
+      - docker tag dockerracketcatalog_catalog tutum.co/jackfirth/racket_catalog
+      - docker push tutum.co/jackfirth/racket_catalog
