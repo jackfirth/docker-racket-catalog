@@ -16,8 +16,6 @@
 (define-syntax-rule (thunk-print body ...)
   (thunk (displayln "Request received") body ...))
 
-(get "/" (thunk-print "hi"))
-
 (define get-pkgs (get "/pkgs" _))
 
 (get-pkgs (thunk-print (~s '("foo"))))

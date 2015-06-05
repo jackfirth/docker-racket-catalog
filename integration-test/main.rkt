@@ -10,5 +10,7 @@
 
 (module+ test
   (require rackunit)
-  (check-equal? (fetch "http://catalog:8000") "hi")
-  (check-equal? (fetch/read "http://catalog:8000/pkgs") '("foo")))
+  (test-begin
+   (check-not-exn (thunk (fetch "http://catalog:8000/pkgs")))
+   (check-equal? (fetch/read "http://catalog:8000/pkgs") '("foo"))
+   (check-pred hash? (fetch/read "http://catalog:8000/pkg/foo"))))
