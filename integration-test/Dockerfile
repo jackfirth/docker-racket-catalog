@@ -1,4 +1,4 @@
 FROM slogsdon/racket
-ADD main.rkt /src/main.rkt
+ADD . /src
 WORKDIR /src
 EXPOSE 8000

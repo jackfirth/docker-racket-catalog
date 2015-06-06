@@ -1,16 +1,30 @@
 #lang racket
 
-(require net/url)
+(require rackunit
+         "fetch.rkt")
 
-(define (fetch url-string)
-  (call/input-url (string->url url-string) get-pure-port port->string))
 
-(define (fetch/read url-string)
-  (read (open-input-string (fetch url-string))))
+(define (route->url-string route)
+  (string-append "http://catalog:8000" route))
+
+(define-check (check-route-up route)
+  (check-not-exn (thunk (fetch (route->url-string route)))))
+
+(define-check (check-route-equal route expected-read-value)
+  (check-equal? (fetch/read (route->url-string route))
+                expected-read-value))
+
+(define-check (check-route-pred route pred)
+  (check-pred pred (fetch/read (route->url-string route))))
+
 
 (module+ test
-  (require rackunit)
   (test-begin
-   (check-not-exn (thunk (fetch "http://catalog:8000/pkgs")))
-   (check-equal? (fetch/read "http://catalog:8000/pkgs") '("foo"))
-   (check-pred hash? (fetch/read "http://catalog:8000/pkg/foo"))))
+   (check-route-up "/pkgs")
+   (check-route-equal "/pkgs" '("bar" "foo"))
+   (check-route-up "/pkg/foo")
+   (check-route-up "/pkg/bar")
+   (check-route-pred "/pkg/foo" hash?)
+   (check-route-pred "/pkg/bar" hash?)
+   (check-route-up "/pkgs-all")
+   (check-route-pred "/pkgs-all" hash?)))

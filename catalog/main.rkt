@@ -1,10 +1,14 @@
 #lang racket
 
-(require fancy-app
+(require "pkg-catalog.rkt"
+         "pkg-server.rkt"
+         fancy-app
          spin)
+
 
 (define foo-pkg-details
   (hasheq 'source "git://github.com/foo/foo"
+          'name "foo"
           'checksum "foo"
           'author "Foo Foo"
           'description "foo package"
@@ -12,16 +16,27 @@
           'dependencies '()
           'modules '((lib "foo/main.rkt"))))
 
+(define bar-pkg-details
+  (hasheq 'source "git://github.com/bar/bar"
+          'name "bar"
+          'checksum "bar"
+          'author "Bar Bar"
+          'description "bar package"
+          'tags '("bar")
+          'dependencies '("foo")
+          'modules '((lib "bar/main.rkt"))))
 
-(define-syntax-rule (thunk-print body ...)
-  (thunk (displayln "Request received") body ...))
+(define mock-pkg-dict
+  (hash "foo" foo-pkg-details
+        "bar" bar-pkg-details))
 
-(define get-pkgs (get "/pkgs" _))
+(define mock-pkg-catalog
+  (package-dict->package-catalog mock-pkg-dict))
 
-(get-pkgs (thunk-print (~s '("foo"))))
+(set-catalog-routes mock-pkg-catalog)
 
-(get "/pkg/foo" (thunk-print (~s foo-pkg-details)))
 
 (module+ main
   (displayln "Running...")
-  (run #:listen-ip #f #:port 8000))
+  (run #:listen-ip #f
+       #:port 8000))
