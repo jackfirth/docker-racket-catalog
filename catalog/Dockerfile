@@ -1,6 +1,6 @@
 FROM slogsdon/racket
-RUN raco pkg install git://github.com/dmac/spin
-RUN raco pkg install fancy-app
+ADD info.rkt /src/info.rkt
+RUN raco pkg install --deps search-auto /src
 ADD main.rkt /src/main.rkt
 WORKDIR /src
 RUN raco test .

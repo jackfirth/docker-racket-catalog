@@ -1,7 +1,7 @@
 #lang racket
 
-(require spin
-         fancy-app)
+(require fancy-app
+         spin)
 
 (define foo-pkg-details
   (hasheq 'source "git://github.com/foo/foo"
