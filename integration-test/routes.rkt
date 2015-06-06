@@ -11,12 +11,15 @@
 (define (route->url-string route)
   (string-append "http://catalog:8000" route))
 
+(define fetch-route (compose fetch route->url-string))
+(define fetch-route/read (compose fetch/read route->url-string))
+
 (define-check (check-route-up route)
-  (check-not-exn (thunk (fetch (route->url-string route)))))
+  (check-not-exn (thunk (fetch-route route))))
 
 (define-check (check-route-equal route expected-read-value)
-  (check-equal? (fetch/read (route->url-string route))
+  (check-equal? (fetch-route/read route)
                 expected-read-value))
 
 (define-check (check-route-pred route pred)
-  (check-pred pred (fetch/read (route->url-string route))))
+  (check-pred pred (fetch-route/read route)))
