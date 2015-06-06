@@ -15,12 +15,20 @@
 
 
 (module+ test
-  (test-begin
+  
+  (test-case
+   "Package catalog summary route"
    (check-route-up "/pkgs")
-   (check-route-equal "/pkgs" '("bar" "foo"))
+   (check-route-get "/pkgs" '("bar" "foo")))
+  
+  (test-case
+   "Package details route"
    (check-route-up "/pkg/foo")
    (check-route-up "/pkg/bar")
-   (check-route-pred "/pkg/foo" hash?)
-   (check-route-pred "/pkg/bar" hash?)
+   (check-route-get-pred "/pkg/foo" hash?)
+   (check-route-get-pred "/pkg/bar" hash?))
+  
+  (test-case
+   "Entire package catalog route"
    (check-route-up "/pkgs-all")
-   (check-route-pred "/pkgs-all" all-pkgs?)))
+   (check-route-get-pred "/pkgs-all" all-pkgs?)))

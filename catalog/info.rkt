@@ -2,4 +2,5 @@
 
 (define deps
   '("git://github.com/dmac/spin"
-    "fancy-app"))
+    "fancy-app"
+    "redis"))

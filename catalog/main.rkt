@@ -2,8 +2,10 @@
 
 (require "pkg-catalog.rkt"
          "pkg-server.rkt"
+         "redis-catalog.rkt"
          fancy-app
-         spin)
+         spin
+         redis)
 
 
 (define foo-pkg-details
@@ -33,10 +35,11 @@
 (define mock-pkg-catalog
   (package-dict->package-catalog mock-pkg-dict))
 
-(set-catalog-routes mock-pkg-catalog)
+(set-catalog-routes redis-catalog)
 
 
 (module+ main
+  (set-redis-catalog! mock-pkg-catalog)
   (displayln "Running...")
   (run #:listen-ip #f
        #:port 8000))

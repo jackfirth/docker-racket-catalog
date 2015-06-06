@@ -2,9 +2,13 @@ catalog:
   build: ./catalog
   ports:
     - "8000:8000"
+  links:
+    - redis
   command: racket main.rkt
 integrationtest:
   build: ./integration-test
   links:
     - catalog
   command: raco test main.rkt
+redis:
+  image: redis
