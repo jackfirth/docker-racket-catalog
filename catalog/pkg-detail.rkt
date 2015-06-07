@@ -24,7 +24,8 @@
   '(source checksum name))
 
 (define (pkg-detail? v)
-  (and (hash-eq? v)
+  (and (hash? v)
+       (hash-eq? v)
        (dict-has-keys? required-keys v)))
 
 

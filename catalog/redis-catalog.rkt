@@ -2,7 +2,8 @@
 
 (require "pkg-catalog.rkt"
          "redis-names.rkt"
-         "redis-read.rkt")
+         "redis-read.rkt"
+         redis)
 
 (provide
  (contract-out
@@ -11,16 +12,36 @@
 
 
 (define/redis (redis-all-packages)
-  (GET/read all-pkgs-key))
+  (if (EXISTS all-pkgs-key)
+      (GET/read all-pkgs-key)
+      (hash)))
 
 (define/redis (redis-package-names)
-  (GET/read pkg-names-key))
+  (if (EXISTS pkg-names-key)
+      (GET/read pkg-names-key)
+      (list)))
 
 (define/redis (redis-package-details name)
-  (GET/read (pkg-details-key name)))
+  (define pkg-key (pkg-details-key name))
+  (if (EXISTS pkg-key)
+      (GET/read pkg-key)
+      #f))
+
+(define (all-pkgs-set all-pkgs details)
+  (define pkg-name (hash-ref details 'name))
+  (hash-set all-pkgs pkg-name details))
+
+(define (pkg-names-set pkg-names details)
+  (define pkg-name (hash-ref details 'name))
+  (sort (set->list (set-add (list->set pkg-names) pkg-name)) string<?))
 
 (define/redis (redis-set-package-details! name details)
-  (SET/write (pkg-details-key name) details))
+  (SET/write (pkg-details-key name) details)
+  (define all-pkgs (redis-all-packages))
+  (define pkg-names (redis-package-names))
+  (SET/write all-pkgs-key (all-pkgs-set all-pkgs details))
+  (SET/write pkg-names-key (pkg-names-set pkg-names details))
+  (void))
 
 
 (define redis-catalog

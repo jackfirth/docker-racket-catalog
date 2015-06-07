@@ -1,8 +1,10 @@
 #lang racket
 
-(require net/url)
+(require net/url
+         fancy-app)
 
-(provide fetch fetch/read)
+(provide fetch fetch/read
+         put/write)
 
 
 (define (fetch url-string)
@@ -10,3 +12,8 @@
 
 (define (fetch/read url-string)
   (read (open-input-string (fetch url-string))))
+
+(define (put/write url-string v)
+  (call/input-url (string->url url-string)
+                  (put-pure-port _ (string->bytes/utf-8 (~s v)))
+                  (compose read open-input-string port->string)))

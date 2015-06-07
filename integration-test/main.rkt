@@ -3,32 +3,54 @@
 (require rackunit
          "routes.rkt")
 
-(define-syntax-rule (matches? pattern v)
-  (match v
-    [pattern #t]
-    [_ #f]))
+(define foo-pkg-details
+  (hasheq 'source "git://github.com/foo/foo"
+          'name "foo"
+          'checksum "foo"
+          'author "Foo Foo"
+          'description "foo package"
+          'tags '("foo")
+          'dependencies '()
+          'modules '((lib "foo/main.rkt"))))
 
-(define (all-pkgs? v)
-  (matches? (hash-table ["foo" (? hash?)]
-                        ["bar" (? hash?)])
-            v))
-
+(define bar-pkg-details
+  (hasheq 'source "git://github.com/bar/bar"
+          'name "bar"
+          'checksum "bar"
+          'author "Bar Bar"
+          'description "bar package"
+          'tags '("bar")
+          'dependencies '("foo")
+          'modules '((lib "bar/main.rkt"))))
 
 (module+ test
   
   (test-case
-   "Package catalog summary route"
-   (check-route-up "/pkgs")
-   (check-route-get "/pkgs" '("bar" "foo")))
-  
-  (test-case
-   "Package details route"
-   (check-route-up "/pkg/foo")
-   (check-route-up "/pkg/bar")
-   (check-route-get-pred "/pkg/foo" hash?)
-   (check-route-get-pred "/pkg/bar" hash?))
-  
-  (test-case
-   "Entire package catalog route"
-   (check-route-up "/pkgs-all")
-   (check-route-get-pred "/pkgs-all" all-pkgs?)))
+   "GET-PUT /pkg/:name - Package details route"
+   
+   (test-case
+    "PUT /pkg/:name"
+    (check-route-up "/pkg/foo")
+    (check-route-up "/pkg/bar")
+    (check-route-put "/pkg/foo" foo-pkg-details)
+    (check-route-put "/pkg/bar" bar-pkg-details))
+   
+   (test-case
+    "GET /pkg/:name"
+    (check-route-up "/pkg/foo")
+    (check-route-up "/pkg/bar")
+    (check-route-get "/pkg/foo" foo-pkg-details)
+    (check-route-get "/pkg/bar" bar-pkg-details))
+   
+   (test-case
+    "GET /pkgs - Package catalog summary route"
+    (check-route-up "/pkgs")
+    (check-route-get "/pkgs" '("bar" "foo")))
+   
+   (test-case
+    "GET /pkgs-all - Entire package catalog route"
+    (check-route-up "/pkgs-all")
+    (check-route-get "/pkgs-all" (hash "foo" foo-pkg-details
+                                       "bar" bar-pkg-details)))))
+   
+   
