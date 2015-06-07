@@ -7,8 +7,9 @@ See the [package catalog protocol docs](http://docs.racket-lang.org/pkg/catalog-
 
 TODO:
 
-- Add REST pkg creation protocol
-- Add REST pkg mutation protocol
+- ~~Add REST pkg creation protocol~~
+- ~~Add REST pkg mutation protocol~~
 - Add authentication layer
+- Add better error handling for malformed inputs on package creation/mutation
 - Add frontend app
 - Add version-query support
