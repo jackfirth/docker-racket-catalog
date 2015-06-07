@@ -2,11 +2,12 @@
 
 (require "pkg-catalog.rkt"
          "redis-names.rkt"
-         "redis-read.rkt"
-         redis)
+         "redis-read.rkt")
 
-(provide redis-catalog
-         set-redis-catalog!)
+(provide
+ (contract-out
+  [redis-catalog package-catalog?]
+  [set-redis-catalog! (-> package-catalog? void)]))
 
 
 (define/redis (redis-all-packages)

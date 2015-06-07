@@ -1,8 +1,10 @@
 #lang racket
 
-(provide all-pkgs-key
-         pkg-names-key
-         pkg-details-key)
+(provide
+ (contract-out
+  [all-pkgs-key string?]
+  [pkg-names-key string?]
+  [pkg-details-key (-> string? string?)]))
 
 (module+ test
   (require rackunit))

@@ -2,9 +2,11 @@
 
 (require redis)
 
-(provide define/redis
-         GET/read
-         SET/write)
+(provide
+ define/redis
+ (contract-out
+  [GET/read (-> string? any/c)]
+  [SET/write (-> string? any/c boolean?)]))
 
 (module+ test
   (require rackunit))
