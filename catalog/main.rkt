@@ -29,8 +29,9 @@
           'modules '((lib "bar/main.rkt"))))
 
 (define mock-pkg-dict
-  (hash "foo" foo-pkg-details
-        "bar" bar-pkg-details))
+  (make-hash
+   `(("foo" . ,foo-pkg-details)
+     ("bar" . ,bar-pkg-details))))
 
 (define mock-pkg-catalog
   (package-dict->package-catalog mock-pkg-dict))
