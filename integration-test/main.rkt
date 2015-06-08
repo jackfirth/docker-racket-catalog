@@ -27,30 +27,19 @@
   
   (test-case
    "GET-PUT /pkg/:name - Package details route"
-   
-   (test-case
-    "PUT /pkg/:name"
-    (check-route-up "/pkg/foo")
-    (check-route-up "/pkg/bar")
-    (check-route-put "/pkg/foo" foo-pkg-details)
-    (check-route-put "/pkg/bar" bar-pkg-details))
-   
-   (test-case
-    "GET /pkg/:name"
-    (check-route-up "/pkg/foo")
-    (check-route-up "/pkg/bar")
-    (check-route-get "/pkg/foo" foo-pkg-details)
-    (check-route-get "/pkg/bar" bar-pkg-details))
-   
-   (test-case
-    "GET /pkgs - Package catalog summary route"
-    (check-route-up "/pkgs")
-    (check-route-get "/pkgs" '("bar" "foo")))
-   
-   (test-case
-    "GET /pkgs-all - Entire package catalog route"
-    (check-route-up "/pkgs-all")
-    (check-route-get "/pkgs-all" (hash "foo" foo-pkg-details
-                                       "bar" bar-pkg-details)))))
-   
-   
+   (check-route-put "/pkg/foo" foo-pkg-details)
+   (check-route-put "/pkg/bar" bar-pkg-details)
+   (check-route-get "/pkg/foo" foo-pkg-details)
+   (check-route-get "/pkg/bar" bar-pkg-details))
+  
+  (test-case
+   "GET /pkgs - Package catalog summary route"
+   (check-route-up "/pkgs")
+   (check-route-get "/pkgs" '("bar" "foo")))
+  
+  (test-case
+   "GET /pkgs-all - Entire package catalog route"
+   (check-route-up "/pkgs-all")
+   (check-route-get "/pkgs-all" (hash "foo" foo-pkg-details
+                                      "bar" bar-pkg-details))))
+
