@@ -9,6 +9,7 @@ TODO:
 
 - ~~Add REST pkg creation protocol~~
 - ~~Add REST pkg mutation protocol~~
+- Add package deletion
 - Add authentication layer
 - Add better error handling for malformed inputs on package creation/mutation
 - Add frontend app
