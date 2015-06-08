@@ -4,8 +4,6 @@ Dockerized Racket webserver running a Racket package catalog backed by a Redis s
 
 Deployed via Tutum at http://catalog.racket-catalog.jackfirth.svc.tutum.io:8000/pkgs
 
-[![Deploy to Tutum](https://s.tutum.co/deploy-to-tutum.svg)](https://dashboard.tutum.co/stack/deploy/)
-
 See the [package catalog protocol docs](http://docs.racket-lang.org/pkg/catalog-protocol.html) for a description of the available routes.
 
 TODO:
