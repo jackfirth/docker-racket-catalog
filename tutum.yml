@@ -1,0 +1,10 @@
+catalog:
+  image: 'tutum.co/jackfirth/racket_catalog:latest'
+  autoredeploy: true
+  command: 'racket main.rkt'
+  links:
+    - redis
+  ports:
+    - '8000:8000'
+redis:
+  image: 'redis:latest'
