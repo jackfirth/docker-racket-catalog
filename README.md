@@ -1,4 +1,5 @@
-# docker-racket-catalog
+# docker-racket-catalog [![Circle CI](https://circleci.com/gh/jackfirth/docker-racket-catalog.svg?style=svg)](https://circleci.com/gh/jackfirth/docker-racket-catalog)
+
 Dockerized Racket webserver running a Racket package catalog 
 
 Deployed via Tutum at http://catalog.racket-catalog.jackfirth.svc.tutum.io:8000/pkgs
