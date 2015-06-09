@@ -10,7 +10,7 @@ TODO:
 
 - ~~Add REST pkg creation protocol~~
 - ~~Add REST pkg mutation protocol~~
-- Add package deletion
+- ~~Add package deletion~~
 - Add authentication layer
 - Specify content type
 - Support JSON content type responses through content negotiation via headers
