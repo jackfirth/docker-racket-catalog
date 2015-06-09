@@ -8,12 +8,14 @@
     ([all-pkgs-thunk (-> pkg-hash/c)]
      [pkg-names-thunk (-> (listof string?))]
      [pkg-details-proc (-> string? pkg-detail?)]
-     [set-pkg-details-proc (-> string? pkg-detail? void?)])]
+     [set-pkg-details-proc (-> string? pkg-detail? void?)]
+     [remove-pkg-details-proc (-> string? void?)])]
   [pkg-hash/c contract?]
   [all-pkgs (-> package-catalog? pkg-hash/c)]
   [pkg-names (-> package-catalog? (listof string?))]
   [pkg-details (-> package-catalog? string? pkg-detail?)]
   [set-pkg-details! (-> package-catalog? string? pkg-detail? void?)]
+  [remove-pkg-details! (-> package-catalog? string? void?)]
   [package-dict->package-catalog (-> pkg-hash/c package-catalog?)]))
 
 (module+ test
@@ -24,7 +26,11 @@
   (hash/c string? pkg-detail?))
 
 (struct package-catalog
-  (all-pkgs-thunk pkg-names-thunk pkg-details-proc set-pkg-details-proc))
+  (all-pkgs-thunk
+   pkg-names-thunk
+   pkg-details-proc
+   set-pkg-details-proc
+   remove-pkg-details-proc))
 
 (define (all-pkgs catalog)
   ((package-catalog-all-pkgs-thunk catalog)))
@@ -38,6 +44,9 @@
 (define (set-pkg-details! catalog name details)
   ((package-catalog-set-pkg-details-proc catalog) name details))
 
+(define (remove-pkg-details! catalog name)
+  ((package-catalog-remove-pkg-details-proc catalog) name))
+
 (define (package-dict->package-catalog pkg-dict)
   (define mutable-pkg-dict (make-hash (dict->list pkg-dict)))
   (define (all-pkgs-thunk) (dict-copy mutable-pkg-dict))
@@ -47,10 +56,13 @@
     (dict-ref mutable-pkg-dict name))
   (define (set-pkg-details-proc name details)
     (dict-set! mutable-pkg-dict name details))
+  (define (remove-pkg-details-proc name)
+    (dict-remove! mutable-pkg-dict name))
   (package-catalog all-pkgs-thunk
                    pkg-names-thunk
                    pkg-details-proc
-                   set-pkg-details-proc))
+                   set-pkg-details-proc
+                   remove-pkg-details-proc))
 
 (module+ test
   (test-begin

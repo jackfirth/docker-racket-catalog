@@ -4,7 +4,8 @@
          fancy-app)
 
 (provide fetch fetch/read
-         put/write)
+         put/write
+         delete)
 
 
 (define (fetch url-string)
@@ -17,3 +18,8 @@
   (call/input-url (string->url url-string)
                   (put-pure-port _ (string->bytes/utf-8 (~s v)))
                   (compose read open-input-string port->string)))
+
+(define (delete url-string)
+  (call/input-url (string->url url-string)
+                  delete-pure-port
+                  port->string))

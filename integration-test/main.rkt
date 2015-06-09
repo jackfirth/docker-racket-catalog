@@ -41,5 +41,10 @@
    "GET /pkgs-all - Entire package catalog route"
    (check-route-up "/pkgs-all")
    (check-route-get "/pkgs-all" (hash "foo" foo-pkg-details
-                                      "bar" bar-pkg-details))))
+                                      "bar" bar-pkg-details)))
+  
+  (test-case
+   "DELETE /pkg/:name - Package details deletion"
+   (check-route-delete "/pkg/foo")
+   (check-route-get "/pkgs" '("bar"))))
 
