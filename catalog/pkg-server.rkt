@@ -26,10 +26,20 @@
 (define (log-put name)
   (displayln/f (string-append "PUT " name)))
 
+(define (hash-merge hash1 hash2)
+  (define key-vals (flatten (hash->list hash2)))
+  (apply hash-set* hash1 key-vals))
+
+(define base-headers
+  (list (header #"Content-Type" #"application/racket")))
+
+(define (write-response v #:headers [headers '()])
+  (list 200 (append base-headers headers) (~s v)))
+
 (define (pkg-details-request pkg-catalog req)
   (define name (req-pkg-name req))
   (log-get name)
-  (~s (pkg-details pkg-catalog name)))
+  (write-response (pkg-details pkg-catalog name)))
 
 (define (set-pkg-details-request pkg-catalog req)
   (define name (req-pkg-name req))
@@ -38,7 +48,7 @@
     pkg-detail?
     (get-req-pkg-details req))
   (set-pkg-details! pkg-catalog name details)
-  (~s (pkg-details pkg-catalog name)))
+  (write-response (pkg-details pkg-catalog name)))
 
 (define (get-req-pkg-details req)
   (read (open-input-string (bytes->string/utf-8 (request-post-data/raw req)))))
@@ -55,11 +65,11 @@
 
 (define ((get-pkgs-all-thunk pkg-catalog))
   (log-get-all)
-  (~s (all-pkgs pkg-catalog)))
+  (write-response (all-pkgs pkg-catalog)))
 
 (define ((get-pkgs-thunk pkg-catalog))
   (log-get-pkgs)
-  (~s (sort (pkg-names pkg-catalog) string<?)))
+  (write-response (sort (pkg-names pkg-catalog) string<?)))
 
 (define (set-catalog-routes pkg-catalog)
   (get "/pkgs-all" (get-pkgs-all-thunk pkg-catalog))
