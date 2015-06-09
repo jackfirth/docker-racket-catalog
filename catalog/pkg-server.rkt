@@ -31,7 +31,8 @@
   (apply hash-set* hash1 key-vals))
 
 (define base-headers
-  (list (header #"Content-Type" #"application/racket")))
+  (list (header #"Content-Type" #"application/racket")
+        (header #"Content-Disposition" #"inline")))
 
 (define (write-response v #:headers [headers '()])
   (list 200 (append base-headers headers) (~s v)))
