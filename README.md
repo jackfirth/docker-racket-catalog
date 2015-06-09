@@ -12,6 +12,8 @@ TODO:
 - ~~Add REST pkg mutation protocol~~
 - Add package deletion
 - Add authentication layer
+- Specify content type
+- Support JSON content type responses through content negotiation via headers
 - Add better error handling for malformed inputs on package creation/mutation
 - Add frontend app
 - Add version-query support
