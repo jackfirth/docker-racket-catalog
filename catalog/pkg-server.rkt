@@ -2,29 +2,14 @@
 
 (require "pkg-catalog.rkt"
          "pkg-detail.rkt"
+         "pkg-server-logging.rkt"
          web-server/http/request-structs
-         racket/place/distributed
          fancy-app
          spin)
 
 (provide
  (contract-out
   [set-catalog-routes (-> package-catalog? void?)]))
-
-(define (log-get name)
-  (displayln/f (string-append "GET " name)))
-
-(define (log-delete name)
-  (displayln/f (string-append "DELETE " name)))
-
-(define (log-get-pkgs)
-  (displayln/f "GET PKGS"))
-
-(define (log-get-all)
-  (displayln/f "GET ALL PKG DETAILS"))
-
-(define (log-put name)
-  (displayln/f (string-append "PUT " name)))
 
 (define (hash-merge hash1 hash2)
   (define key-vals (flatten (hash->list hash2)))
