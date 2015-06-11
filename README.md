@@ -13,6 +13,7 @@ TODO:
 - ~~Add package deletion~~
 - ~~Specify content type~~ (`application/racket`)
 - Add identity layer to package server through email in headers
+- Prevent PUT/DELETE requests to packages for which the current agent is not the author
 - Add authentication container that takes a JWT token and verifies it, then forwards valid requests to the internal catalog container with an appropriate email in the headers
 - Add nginx reverse-proxy which serves up static assets including a compiled frontend app and forwards api requests to the catalog service
 - Add frontend app
