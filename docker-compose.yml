@@ -4,7 +4,7 @@ catalog:
     - "8000:8000"
   links:
     - redis
-  command: racket main.rkt
+  command: ./main
 integrationtest:
   build: ./integration-test
   links:
