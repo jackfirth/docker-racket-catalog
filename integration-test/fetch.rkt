@@ -3,9 +3,11 @@
 (require net/url
          fancy-app)
 
-(provide fetch fetch/read
+(provide fetch
+         fetch/read
          put/write
-         delete)
+         delete
+         delete/read)
 
 
 (define (fetch url-string)
@@ -23,3 +25,6 @@
   (call/input-url (string->url url-string)
                   delete-pure-port
                   port->string))
+
+(define (delete/read url-string)
+  (read (open-input-string (delete url-string))))

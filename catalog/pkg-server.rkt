@@ -2,8 +2,7 @@
 
 (require "pkg-catalog.rkt"
          "pkg-detail.rkt"
-         "pkg-server-logging.rkt"
-         web-server/http/request-structs
+         "pkg-server-handlers.rkt"
          fancy-app
          spin)
 
@@ -22,44 +21,12 @@
 (define (write-response v #:headers [headers '()])
   (list 200 (append base-headers headers) (~s v)))
 
-(define (pkg-details-request pkg-catalog req)
-  (define name (req-pkg-name req))
-  (log-get name)
-  (write-response (pkg-details pkg-catalog name)))
-
-(define (set-pkg-details-request pkg-catalog req)
-  (define name (req-pkg-name req))
-  (log-put name)
-  (define/contract details
-    pkg-detail?
-    (get-req-pkg-details req))
-  (set-pkg-details! pkg-catalog name details)
-  (write-response (pkg-details pkg-catalog name)))
-
-(define (get-req-pkg-details req)
-  (read (open-input-string (bytes->string/utf-8 (request-post-data/raw req)))))
-
-(define/contract (req-pkg-name req)
-  (-> request? string?)
-  (params req 'name))
-
-(define (remove-pkg-details-request pkg-catalog req)
-  (define name (req-pkg-name req))
-  (log-delete name)
-  (remove-pkg-details! pkg-catalog name)
-  "ok")
-
-(define ((get-pkgs-all-thunk pkg-catalog))
-  (log-get-all)
-  (write-response (all-pkgs pkg-catalog)))
-
-(define ((get-pkgs-thunk pkg-catalog))
-  (log-get-pkgs)
-  (write-response (sort (pkg-names pkg-catalog) string<?)))
+(define (write-handler handler #:headers [headers '()])
+  (compose (write-response _ #:headers headers) handler))
 
 (define (set-catalog-routes pkg-catalog)
-  (get "/pkgs-all" (get-pkgs-all-thunk pkg-catalog))
-  (get "/pkgs" (get-pkgs-thunk pkg-catalog))
-  (get "/pkg/:name" (pkg-details-request pkg-catalog _))
-  (put "/pkg/:name" (set-pkg-details-request pkg-catalog _))
-  (delete "/pkg/:name" (remove-pkg-details-request pkg-catalog _)))
+  (get "/pkgs-all" (write-handler (get-pkgs-all-thunk pkg-catalog)))
+  (get "/pkgs" (write-handler (get-pkgs-thunk pkg-catalog)))
+  (get "/pkg/:name" (write-handler (pkg-details-request pkg-catalog _)))
+  (put "/pkg/:name" (write-handler (set-pkg-details-request pkg-catalog _)))
+  (delete "/pkg/:name" (write-handler (remove-pkg-details-request pkg-catalog _))))

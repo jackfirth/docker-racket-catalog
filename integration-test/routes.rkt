@@ -21,6 +21,7 @@
   (put/write (route->url-string route) v))
 
 (define delete-route (compose delete route->url-string))
+(define delete-route/read (compose delete/read route->url-string))
 
 (define-syntax-rule (with-route-response id proc route body ...)
   (let* ([id (proc route)]
@@ -36,7 +37,7 @@
   (with-route-response id (put-route/write _ v) route body ...))
 
 (define-syntax-rule (with-route-delete-response id route body ...)
-  (with-route-response id delete-route route body ...))
+  (with-route-response id delete-route/read route body ...))
 
 (define-check (check-route-up route)
   (check-not-exn (thunk (fetch-route route))))
@@ -55,4 +56,4 @@
 
 (define-check (check-route-delete route)
   (with-route-delete-response response route
-                              (check-equal? response "ok")))
+                              (check-true response)))
