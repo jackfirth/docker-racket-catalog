@@ -1,32 +1,30 @@
-#lang racket
+#lang typed/racket
 
 (require fancy-app)
 
-(provide
- (contract-out
-  [pkg-detail? predicate/c]))
+(provide pkg-detail?)
 
 (module+ test
-  (require rackunit))
+  (require typed/rackunit))
 
-  
-(define (dict-has-keys? keys dict)
-  (andmap (dict-has-key? dict _) keys))
+(: hash-has-keys? (-> (Listof Any) HashTableTop Boolean))
+(define (hash-has-keys? keys dict)
+  (andmap (hash-has-key? dict _) keys))
 
 (module+ test
-  (check-true (dict-has-keys? '(a b) #hash((a . 1) (b . 2))))
-  (check-true (dict-has-keys? '(a b) #hash((a . 1) (b . 2) (c . 3))))
-  (check-false (dict-has-keys? '(a b) #hash((a . 1))))
-  (check-false (dict-has-keys? '(a b) #hash((a . 1) (c . 3)))))
+  (check-true (hash-has-keys? '(a b) #hash((a . 1) (b . 2))))
+  (check-true (hash-has-keys? '(a b) #hash((a . 1) (b . 2) (c . 3))))
+  (check-false (hash-has-keys? '(a b) #hash((a . 1))))
+  (check-false (hash-has-keys? '(a b) #hash((a . 1) (c . 3)))))
 
-
+(: required-keys (Listof Symbol))
 (define required-keys
   '(source checksum name))
 
 (define (pkg-detail? v)
   (and (hash? v)
        (hash-eq? v)
-       (dict-has-keys? required-keys v)))
+       (hash-has-keys? required-keys v)))
 
 
 (module+ test
