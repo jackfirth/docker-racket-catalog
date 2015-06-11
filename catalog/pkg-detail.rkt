@@ -2,7 +2,8 @@
 
 (require fancy-app)
 
-(provide pkg-detail?)
+(provide pkg-detail?
+         PackageDetail)
 
 (module+ test
   (require typed/rackunit))
@@ -25,6 +26,8 @@
   (and (hash? v)
        (hash-eq? v)
        (hash-has-keys? required-keys v)))
+
+(define-type PackageDetail (HashTable Symbol Any))
 
 
 (module+ test
