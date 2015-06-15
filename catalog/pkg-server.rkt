@@ -10,10 +10,6 @@
  (contract-out
   [set-catalog-routes (-> package-catalog? void?)]))
 
-(define (hash-merge hash1 hash2)
-  (define key-vals (flatten (hash->list hash2)))
-  (apply hash-set* hash1 key-vals))
-
 (define base-headers
   (list (header #"Content-Type" #"application/racket")
         (header #"Content-Disposition" #"inline")))
