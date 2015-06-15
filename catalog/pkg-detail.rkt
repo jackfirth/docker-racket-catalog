@@ -3,6 +3,7 @@
 (require fancy-app)
 
 (provide pkg-detail?
+         author-of-pkg?
          PackageDetail)
 
 (module+ test
@@ -20,7 +21,7 @@
 
 (: required-keys (Listof Symbol))
 (define required-keys
-  '(source checksum name))
+  '(source checksum name author))
 
 (define (pkg-detail? v)
   (and (hash? v)
@@ -29,14 +30,20 @@
 
 (define-type PackageDetail (HashTable Symbol Any))
 
+(: author-of-pkg? (-> Any PackageDetail Boolean))
+(define (author-of-pkg? author pkg-detail)
+  (equal? author (hash-ref pkg-detail 'author)))
+
 
 (module+ test
   (check-true (pkg-detail? #hasheq((source . "path/to/foo")
                                    (checksum . 0)
-                                   (name . "foo"))))
+                                   (name . "foo")
+                                   (author . "foo@bar"))))
   (check-true (pkg-detail? #hasheq((source . "path/to/foo")
                                    (checksum . 0)
                                    (name . "foo")
+                                   (author . "foo@bar")
                                    (extra . "blah"))))
   (check-false (pkg-detail? #hasheq((source . "path/to/foo")
                                    (checksum . 0)))))

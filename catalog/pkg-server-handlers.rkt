@@ -29,9 +29,7 @@
 (define (set-pkg-details-request pkg-catalog req)
   (define name (req-pkg-name req))
   (log-put name)
-  (define/contract details
-    pkg-detail?
-    (get-req-pkg-details req))
+  (define details (get-req-pkg-details req))
   (set-pkg-details! pkg-catalog name details)
   (pkg-details pkg-catalog name))
 
@@ -42,7 +40,8 @@
   #t)
 
 
-(define (get-req-pkg-details req)
+(define/contract (get-req-pkg-details req)
+  (-> request? pkg-detail?)
   (read (open-input-string (bytes->string/utf-8 (request-post-data/raw req)))))
 
 (define/contract (req-pkg-name req)
