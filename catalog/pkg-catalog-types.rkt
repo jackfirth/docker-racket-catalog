@@ -12,6 +12,6 @@
 (struct package-catalog
   ([all-pkgs-thunk : (-> PackageCatalogHash)]
    [pkg-names-thunk : (-> (Listof String))]
-   [pkg-details-proc : (-> String PackageDetail)]
+   [pkg-details-proc : (-> String (U PackageDetail #f))]
    [set-pkg-details-proc : (-> String PackageDetail Void)]
    [remove-pkg-details-proc : (-> String Void)]))
