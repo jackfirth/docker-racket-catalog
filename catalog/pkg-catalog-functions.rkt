@@ -17,7 +17,7 @@
 (define (pkg-names catalog)
   ((package-catalog-pkg-names-thunk catalog)))
 
-(: pkg-details (-> package-catalog String PackageDetail))
+(: pkg-details (-> package-catalog String (U PackageDetail #f)))
 (define (pkg-details catalog name)
   ((package-catalog-pkg-details-proc catalog) name))
 

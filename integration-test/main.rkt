@@ -1,50 +1,37 @@
 #lang racket
 
 (require rackunit
-         "routes.rkt")
+         fancy-app
+         "rest/rest-param.rkt"
+         "rest/rest-test.rkt"
+         "rest/rest-catalog.rkt"
+         "mock-data.rkt")
 
-(define foo-pkg-details
-  (hasheq 'source "git://github.com/foo/foo"
-          'name "foo"
-          'checksum "foo"
-          'author "Foo Foo"
-          'description "foo package"
-          'tags '("foo")
-          'dependencies '()
-          'modules '((lib "foo/main.rkt"))))
 
-(define bar-pkg-details
-  (hasheq 'source "git://github.com/bar/bar"
-          'name "bar"
-          'checksum "bar"
-          'author "Bar Bar"
-          'description "bar package"
-          'tags '("bar")
-          'dependencies '("foo")
-          'modules '((lib "bar/main.rkt"))))
+(define catalog-container-requester (make-pkg-catalog-requester "http://catalog:8000"))
+
+(define foo-user-headers '("Identity: Email: foo@baz"))
+(define as-foo-user (wrap-requester-headers foo-user-headers _))
+
+(define http-forbidden-exn? (http-exn-of-code? 403 _))
 
 (module+ test
-  
-  (test-case
-   "GET-PUT /pkg/:name - Package details route"
-   (check-route-put "/pkg/foo" foo-pkg-details)
-   (check-route-put "/pkg/bar" bar-pkg-details)
-   (check-route-get "/pkg/foo" foo-pkg-details)
-   (check-route-get "/pkg/bar" bar-pkg-details))
-  
-  (test-case
-   "GET /pkgs - Package catalog summary route"
-   (check-route-up "/pkgs")
-   (check-route-get "/pkgs" '("bar" "foo")))
-  
-  (test-case
-   "GET /pkgs-all - Entire package catalog route"
-   (check-route-up "/pkgs-all")
-   (check-route-get "/pkgs-all" (hash "foo" foo-pkg-details
-                                      "bar" bar-pkg-details)))
-  
-  (test-case
-   "DELETE /pkg/:name - Package details deletion"
-   (check-route-delete "/pkg/foo")
-   (check-route-get "/pkgs" '("bar"))))
-
+  (test-begin
+   (with-requester catalog-container-requester
+     (check-get-not-exn "/pkgs")
+     (check-get-not-exn "/pkgs-all")
+     (check-get "/pkgs" '())
+     (check-get "/pkgs-all" (hash))
+     (check-put "/pkg/foo" foo-pkg-details foo-pkg-details)
+     (check-get "/pkg/foo" foo-pkg-details)
+     (check-get "/pkgs" '("foo"))
+     (check-get "/pkgs-all" (hash "foo" foo-pkg-details))
+     (check-put "/pkg/bar" bar-pkg-details bar-pkg-details)
+     (check-get "/pkg/bar" bar-pkg-details)
+     (check-get "/pkgs" '("bar" "foo"))
+     (check-get "/pkgs-all" foo-bar-pkgs)
+     (check-put-exn http-forbidden-exn? "/pkg/foo" foo-pkg-details)
+     (check-delete-exn http-forbidden-exn? "/pkg/foo"))
+   (with-requester (as-foo-user catalog-container-requester)
+     (check-put-not-exn "/pkg/foo" foo-pkg-details)
+     (check-put-exn http-forbidden-exn? "/pkg/bar" bar-pkg-details))))

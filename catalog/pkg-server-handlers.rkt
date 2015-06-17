@@ -1,7 +1,6 @@
 #lang racket
 
-(require web-server/http/request-structs
-         spin
+(require "pkg-server-request-details.rkt"
          "pkg-server-logging.rkt"
          "pkg-catalog.rkt"
          "pkg-detail.rkt")
@@ -38,12 +37,3 @@
   (log-delete name)
   (remove-pkg-details! pkg-catalog name)
   #t)
-
-
-(define/contract (get-req-pkg-details req)
-  (-> request? pkg-detail?)
-  (read (open-input-string (bytes->string/utf-8 (request-post-data/raw req)))))
-
-(define/contract (req-pkg-name req)
-  (-> request? string?)
-  (params req 'name))

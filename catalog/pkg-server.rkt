@@ -3,6 +3,8 @@
 (require "pkg-catalog.rkt"
          "pkg-detail.rkt"
          "pkg-server-handlers.rkt"
+         "pkg-server-access-control.rkt"
+         "write-response.rkt"
          fancy-app
          spin)
 
@@ -10,19 +12,28 @@
  (contract-out
   [set-catalog-routes (-> package-catalog? void?)]))
 
-(define base-headers
-  (list (header #"Content-Type" #"application/racket")
-        (header #"Content-Disposition" #"inline")))
+(define (pkgs-all-handler pkg-catalog)
+  (write-ok-handler (get-pkgs-all-thunk pkg-catalog)))
 
-(define (write-response v #:headers [headers '()])
-  (list 200 (append base-headers headers) (~s v)))
+(define (pkgs-handler pkg-catalog)
+  (write-ok-handler (get-pkgs-thunk pkg-catalog)))
 
-(define (write-handler handler #:headers [headers '()])
-  (compose (write-response _ #:headers headers) handler))
+(define (get-pkg-handler pkg-catalog)
+  (write-ok-handler (pkg-details-request pkg-catalog _)))
+
+(define (put-pkg-handler pkg-catalog)
+  (author-only-handler pkg-catalog
+                       (write-ok-handler (set-pkg-details-request pkg-catalog _))
+                       _))
+
+(define (delete-pkg-handler pkg-catalog)
+  (author-only-handler pkg-catalog
+                       (write-ok-handler (remove-pkg-details-request pkg-catalog _))
+                       _))
 
 (define (set-catalog-routes pkg-catalog)
-  (get "/pkgs-all" (write-handler (get-pkgs-all-thunk pkg-catalog)))
-  (get "/pkgs" (write-handler (get-pkgs-thunk pkg-catalog)))
-  (get "/pkg/:name" (write-handler (pkg-details-request pkg-catalog _)))
-  (put "/pkg/:name" (write-handler (set-pkg-details-request pkg-catalog _)))
-  (delete "/pkg/:name" (write-handler (remove-pkg-details-request pkg-catalog _))))
+  (get "/pkgs-all" (pkgs-all-handler pkg-catalog))
+  (get "/pkgs" (pkgs-handler pkg-catalog))
+  (get "/pkg/:name" (get-pkg-handler pkg-catalog))
+  (put "/pkg/:name" (put-pkg-handler pkg-catalog))
+  (delete "/pkg/:name" (delete-pkg-handler pkg-catalog)))
