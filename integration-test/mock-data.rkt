@@ -9,7 +9,7 @@
   (hasheq 'source "git://github.com/foo/foo"
           'name "foo"
           'checksum "foo"
-          'author "Foo Foo"
+          'author "foo@baz"
           'description "foo package"
           'tags '("foo")
           'dependencies '()
@@ -19,7 +19,7 @@
   (hasheq 'source "git://github.com/bar/bar"
           'name "bar"
           'checksum "bar"
-          'author "Bar Bar"
+          'author "bar@baz"
           'description "bar package"
           'tags '("bar")
           'dependencies '("foo")
