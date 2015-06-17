@@ -5,7 +5,9 @@
          "rest-wrap.rkt"
          "call-response.rkt")
 
-(provide requester-pure)
+(provide (struct-out exn:fail:network:http)
+         requester-pure
+         http-exn-of-code?)
 
 
 (define message-codes
@@ -30,18 +32,19 @@
 
 (define code->message (hash-ref message-codes _))
 
-(define (request-error-message handler-response)
+(struct exn:fail:network:http exn:fail:network (code) #:transparent)
+
+(define (make-http-exn handler-response)
   (define code (response-code handler-response))
-  (format "~a: ~a\nbody: ~a"
-          code
-          (code->message code)
-          (response-body handler-response)))
+  (define body (response-body handler-response))
+  (exn:fail:network:http (~a body) (current-continuation-marks) code))
+
+(define (http-exn-of-code? code v)
+  (and (exn:fail:network:http? v)
+       (= code (exn:fail:network:http-code v))))
 
 (define (raise-request-error handler-response)
-  (raise
-   (exn:fail:network
-    (request-error-message handler-response)
-    (current-continuation-marks))))
+  (raise (make-http-exn handler-response)))
 
 (define failure-code? (<= 400 _ 600))
 
