@@ -23,6 +23,13 @@
 (define-check (check-put-not-exn location body)
   (check-not-exn (thunk (put (current-requester) location body))))
 
+(define-check (check-delete location response)
+  (check-equal? (delete (current-requester) location) response))
+(define-check (check-delete-exn exn-pred location)
+  (check-exn exn-pred (thunk (delete (current-requester) location))))
+(define-check (check-delete-not-exn location)
+  (check-not-exn (thunk (delete (current-requester) location))))
+
 (define catalog-container-requester (make-pkg-catalog-requester "http://catalog:8000"))
 
 (define-syntax-rule (with-requester requester body ...)
@@ -47,4 +54,5 @@
     (check-get "/pkg/bar" bar-pkg-details)
     (check-get "/pkgs" '("bar" "foo"))
     (check-get "/pkgs-all" foo-bar-pkgs)
-    (check-put-exn (http-exn-of-code? 403 _) "/pkg/foo" foo-pkg-details)))
+    (check-put-exn (http-exn-of-code? 403 _) "/pkg/foo" foo-pkg-details)
+    (check-delete-exn (http-exn-of-code? 403 _) "/pkg/foo")))
