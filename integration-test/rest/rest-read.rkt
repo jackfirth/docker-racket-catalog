@@ -2,7 +2,7 @@
 
 (require fancy-app
          net/url
-         "rest.rkt"
+         "main.rkt"
          "call-response.rkt")
 
 (provide wrap-read

@@ -1,50 +1,22 @@
 #lang racket
 
 (require rackunit
-         "routes.rkt")
-
-(define foo-pkg-details
-  (hasheq 'source "git://github.com/foo/foo"
-          'name "foo"
-          'checksum "foo"
-          'author "Foo Foo"
-          'description "foo package"
-          'tags '("foo")
-          'dependencies '()
-          'modules '((lib "foo/main.rkt"))))
-
-(define bar-pkg-details
-  (hasheq 'source "git://github.com/bar/bar"
-          'name "bar"
-          'checksum "bar"
-          'author "Bar Bar"
-          'description "bar package"
-          'tags '("bar")
-          'dependencies '("foo")
-          'modules '((lib "bar/main.rkt"))))
+         "rest/main.rkt"
+         "rest/rest-catalog.rkt")
 
 (module+ test
+  (define current-requester (make-parameter #f))
   
-  (test-case
-   "GET-PUT /pkg/:name - Package details route"
-   (check-route-put "/pkg/foo" foo-pkg-details)
-   (check-route-put "/pkg/bar" bar-pkg-details)
-   (check-route-get "/pkg/foo" foo-pkg-details)
-   (check-route-get "/pkg/bar" bar-pkg-details))
+  (define-check (check-get-not-exn location)
+    (check-not-exn (thunk (get (current-requester) location))))
+  (define-check (check-get location response)
+    (check-equal? (get (current-requester) location) response))
+  (define-check (check-put location body response)
+    (check-equal? (put (current-requester) location body) response))
+  (define-check (check-get-exn exn-pred location)
+    (check-exn exn-pred (thunk (get (current-requester) location))))
   
-  (test-case
-   "GET /pkgs - Package catalog summary route"
-   (check-route-up "/pkgs")
-   (check-route-get "/pkgs" '("bar" "foo")))
+  (define catalog-container-requester (make-pkg-catalog-requester "http://catalog:8000"))
   
-  (test-case
-   "GET /pkgs-all - Entire package catalog route"
-   (check-route-up "/pkgs-all")
-   (check-route-get "/pkgs-all" (hash "foo" foo-pkg-details
-                                      "bar" bar-pkg-details)))
-  
-  (test-case
-   "DELETE /pkg/:name - Package details deletion"
-   (check-route-delete "/pkg/foo")
-   (check-route-get "/pkgs" '("bar"))))
-
+  (parameterize ([current-requester catalog-container-requester])
+    (check-get-not-exn "/pkgs")))

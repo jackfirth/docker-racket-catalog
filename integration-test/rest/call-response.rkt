@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang typed/racket/no-check
 
 (require typed/net/url
          typed/net/head
@@ -53,5 +53,5 @@
 
 
 (: call-response/input-url (-> Url (-> Url Input-Port) Response))
-(define call-response/input-url
-  (call/input-url _ _ impure-port->response))
+(define (call-response/input-url url connect)
+  (call/input-url url connect impure-port->response))

@@ -2,7 +2,7 @@
 
 (require fancy-app
          net/url
-         "rest.rkt"
+         "main.rkt"
          "rest-read.rkt")
 
 (provide make-pkg-catalog-requester
