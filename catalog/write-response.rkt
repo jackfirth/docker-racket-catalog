@@ -6,7 +6,9 @@
 (provide
  (contract-out
   [response? flat-contract?]
+  [write-ok-response (-> any/c response?)]
   [write-forbidden-response (-> any/c response?)]
+  [write-not-found-response (-> any/c response?)]
   [write-ok-handler (-> (unconstrained-domain-> any/c) (unconstrained-domain-> response?))]))
 
 
@@ -22,6 +24,7 @@
 
 (define write-ok-response (write-response 200 _))
 (define write-forbidden-response (write-response 403 _))
+(define write-not-found-response (write-response 404 _))
 
 (define (write-handler code handler)
   (compose (write-response code _) handler))

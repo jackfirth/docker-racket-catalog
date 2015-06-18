@@ -27,5 +27,5 @@
 
 (define (package-access-disallowed-message author name)
   (if author 
-      (format "Request denied: User ~a is not the author of package ~a" author name)
-      (format "Request denied: Modification of package ~a requires identification" name)))
+      (format "Request denied: User \"~a\" is not the author of package \"~a\"" author name)
+      (format "Request denied: Modification of package \"~a\" requires identification" name)))

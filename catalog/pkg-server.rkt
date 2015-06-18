@@ -4,6 +4,7 @@
          "pkg-detail.rkt"
          "pkg-server-handlers.rkt"
          "pkg-server-access-control.rkt"
+         "pkg-server-request-details.rkt"
          "write-response.rkt"
          fancy-app
          spin)
@@ -19,7 +20,14 @@
   (write-ok-handler (get-pkgs-thunk pkg-catalog)))
 
 (define (get-pkg-handler pkg-catalog)
-  (write-ok-handler (pkg-details-request pkg-catalog _)))
+  (define (handler request)
+    (define maybe-pkg (pkg-details-request pkg-catalog request))
+    (if maybe-pkg
+        (write-ok-response maybe-pkg)
+        (write-not-found-response
+         (format "No package named \"~a\""
+                 (req-pkg-name request)))))
+  handler)
 
 (define (put-pkg-handler pkg-catalog)
   (author-only-handler pkg-catalog
