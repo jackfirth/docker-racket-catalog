@@ -1,0 +1,12 @@
+<div ng-controller="PackagesCtrl as packagesCtrl">
+  <md-list>
+    <md-subheader class="md-no-sticky">Packages</md-subheader>
+    <md-list-item class="md-3-line" ng-repeat="item in packagesCtrl.packages">
+      <md-switch></md-switch>
+      <div class="md-list-item-text">
+        <h3>{{ item.name }}</h3>
+        <h4>{{ item.author }}</h4>
+      </div>
+    </md-list-item>
+  <md-list>
+</div>
