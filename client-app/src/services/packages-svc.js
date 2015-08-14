@@ -1,5 +1,5 @@
 import R from 'ramda';
-import {readRacketDataToJson} from './read-racket';
+import readRacket from './read-racket';
 
 
 const logPackageSvcError = (e) => {
@@ -11,7 +11,9 @@ export default ($http) => {
   const getPackages = () => {
     return $http.get('/api/pkgs-all')
       .then(R.prop('data'))
-      .then(readRacketDataToJson)
+      .then(R.tap(v => console.log("Data: ", v)))
+      .then(readRacket)
+      .then(R.tap(v => console.log("Catalog: ", v)))
       .then(R.values)
       .catch(logPackageSvcError);
   };

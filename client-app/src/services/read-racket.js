@@ -45,9 +45,4 @@ const hashLiteral = hashLeftParen
 const form = listLiteral.or(hashLiteral);
 
 
-export default {
-  readPair: (str) => hashPair.parse(str).value,
-  readRacket: (racketDataString) => {
-    return expr.parse(racketDataString).value;
-  }
-};
+export default (racketDataString) => expr.parse(racketDataString).value;
