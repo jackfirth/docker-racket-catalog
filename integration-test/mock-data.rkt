@@ -11,7 +11,7 @@
           'checksum "foo"
           'author "foo@baz"
           'description "foo package"
-          'tags '("foo")
+          'tags '("foo" "foo-a" "foo-b")
           'dependencies '()
           'modules '((lib "foo/main.rkt"))))
 
@@ -21,7 +21,7 @@
           'checksum "bar"
           'author "bar@baz"
           'description "bar package"
-          'tags '("bar")
+          'tags '("bar" "bar1" "bar2")
           'dependencies '("foo")
           'modules '((lib "bar/main.rkt"))))
 

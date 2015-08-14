@@ -1,11 +1,15 @@
 <div ng-controller="PackagesCtrl as packagesCtrl">
-  <md-list>
-    <md-subheader class="md-no-sticky">Packages</md-subheader>
-    <md-list-item class="md-3-line" ng-repeat="item in packagesCtrl.packages">
-      <md-switch></md-switch>
-      <div class="md-list-item-text">
-        <h3>{{ item.name }}</h3>
-        <h4>{{ item.author }}</h4>
+  <md-list layout-margin>
+    <md-list-item layout-fill layout="row" class="md-3-line" ng-repeat="item in packagesCtrl.packages">
+      <div flex="20" flex-offset="10" class="md-list-item-text">
+        <h3 class="md-headline">{{ item.name }}</h1>
+        <h4 class="md-subhead">{{ item.author }}</h4>
+      </div>
+      <div flex="30" class="md-list-item-text">
+        <p class="md-body-2">{{ item.description }}</p>
+      </div>
+      <div flex="40" class="md-list-item-text">
+        <md-button ng-repeat="tag in item.tags">{{ tag }}</md-button>
       </div>
     </md-list-item>
   <md-list>
