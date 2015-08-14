@@ -13,7 +13,7 @@ const dot = lexeme(string('.'));
 const trueLiteral = lexeme(string('#t'));
 const falseLiteral = lexeme(string('#f'));
 
-const expr = lazy('an s-expression', () => form.or(atom));
+const racketDatum = lazy('read/write-able Racket data', () => form.or(atom));
 
 const dropQuotes = compose(tail, init);
 
@@ -27,12 +27,12 @@ const atom = numberLiteral
   .or(trueLiteral)
   .or(falseLiteral);
 
-const listLiteral = leftParen.then(expr.many()).skip(rightParen);
+const listLiteral = leftParen.then(racketDatum.many()).skip(rightParen);
 
 const hashPair = leftParen
   .then(seq(
     atom.skip(dot),
-    expr
+    racketDatum
   ))
   .skip(rightParen);
 
@@ -44,5 +44,4 @@ const hashLiteral = hashLeftParen
 
 const form = listLiteral.or(hashLiteral);
 
-
-export default (racketDataString) => expr.parse(racketDataString).value;
+export default racketDatum;

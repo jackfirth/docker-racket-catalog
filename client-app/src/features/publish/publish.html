@@ -1,3 +1,64 @@
-<div ng-controller="PublishCtrl as publishCtrl">
-  <p>Publish a package, woooo!</p>
+<div
+    ng-controller="PublishCtrl as publishCtrl"
+    layout-margin
+    layout="column"
+    layout-align="center">
+  <form name="packagePublishForm">
+    <md-card layout="column" layout-align="center center" layout-padding>
+      <md-card-content layout-align="center start">
+        <h1 layout-padding>
+          New Package Details
+        </h1>
+        <md-input-container>
+          <label>Name</label>
+          <input
+              name="packageName"
+              type="text"
+              ng-model="publishCtrl.newPackage.name"
+              required
+              md-maxlength="30">
+          <ng-messages for="packagePublishForm.packageName.$error">
+            <ng-message when="required">This is required.</ng-message>
+            <ng-message when="md-maxlength">The name has to be less than 30 characters long.</ng-message>
+          </ng-messages>
+        </md-input-container>
+        <md-input-container>
+          <label>Author</label>
+          <input
+              name="author"
+              type="email"
+              ng-model="publishCtrl.newPackage.author"
+              required>
+          <ng-messages for="packagePublishForm.author.$error">
+            <ng-message when="required">This is required.</ng-message>
+            <ng-message when="email">The name has to be less than 30 characters long.</ng-message>
+          </ng-messages>
+        </md-input-container>
+        <md-input-container>
+          <label>Source</label>
+          <input
+              name="packageSource"
+              type="text"
+              ng-model="publishCtrl.newPackage.source"
+              required>
+          <ng-messages for="packagePublishForm.packageSource.$error">
+            <ng-message when="required">This is required.</ng-message>
+          </ng-messages>
+        </md-input-container>
+        <md-input-container>
+          <label>Description</label>
+          <input
+              name="packageDescription"
+              type="text"
+              ng-model="publishCtrl.newPackage.description">
+        </md-input-container>
+      </md-card-content>
+      <div class="md-actions" layout="row" layout-align="end center">
+        <md-button
+            class="md-raised"
+            ng-click="publishCtrl.publishNewPackage()"
+            ng-disabled="packagePublishForm.$invalid">Upload</md-button>
+      </div>
+    </md-card>
+  </form>
 </div>

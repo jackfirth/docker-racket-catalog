@@ -8,6 +8,7 @@ import {exposeControllers, exposeFactories} from './module-util';
 
 const catalog = angular.module('catalog', [
   'ngMaterial',
+  'ngMessages',
   'ui.router'
 ]);
 
