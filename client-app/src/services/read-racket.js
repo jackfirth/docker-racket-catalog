@@ -1,5 +1,5 @@
-import {fromPairs} from 'ramda';
-import {regex, string, lazy, optWhitespace} from 'parsimmon';
+import {fromPairs, compose, init, tail} from 'ramda';
+import {regex, string, lazy, optWhitespace, seq} from 'parsimmon';
 
 
 const lexeme = (parser) => parser.skip(optWhitespace);
@@ -7,7 +7,7 @@ const lexeme = (parser) => parser.skip(optWhitespace);
 const leftParen = lexeme(string('('));
 const rightParen = lexeme(string(')'));
 const hashLeftParen = lexeme(string('#hash('));
-const hashEqLeftParen = lexeme(string('#hashEq('));
+const hashEqLeftParen = lexeme(string('#hasheq('));
 const dot = lexeme(string('.'));
 
 const trueLiteral = lexeme(string('#t'));
@@ -15,8 +15,10 @@ const falseLiteral = lexeme(string('#f'));
 
 const expr = lazy('an s-expression', () => form.or(atom));
 
+const dropQuotes = compose(tail, init);
+
 const numberLiteral = lexeme(regex(/[0-9]+/).map(parseInt));
-const stringLiteral = lexeme(regex(/'[^']*'/g));
+const stringLiteral = lexeme(regex(/"[^"]*"/)).map(dropQuotes);
 const symbol = lexeme(regex(/[a-z_]\w*/i));
 
 const atom = numberLiteral
@@ -28,9 +30,10 @@ const atom = numberLiteral
 const listLiteral = leftParen.then(expr.many()).skip(rightParen);
 
 const hashPair = leftParen
-  .then(stringLiteral.or(symbol))
-  .skip(dot)
-  .then(expr)
+  .then(seq(
+    atom.skip(dot),
+    expr
+  ))
   .skip(rightParen);
 
 const hashLiteral = hashLeftParen
@@ -42,4 +45,9 @@ const hashLiteral = hashLeftParen
 const form = listLiteral.or(hashLiteral);
 
 
-export default (racketDataString) => expr.parse(racketDataString).value;
+export default {
+  readPair: (str) => hashPair.parse(str).value,
+  readRacket: (racketDataString) => {
+    return expr.parse(racketDataString).value;
+  }
+};

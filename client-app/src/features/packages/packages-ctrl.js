@@ -3,6 +3,7 @@ export default function PackagesCtrl(PackagesSvc) {
 
 
   const setPackages = (packages) => {
+    console.log("Packages: ", packages);
     packagesCtrl.packages = packages;
   };
 

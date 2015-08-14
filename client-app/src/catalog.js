@@ -7,9 +7,8 @@ import {exposeControllers, exposeFactories} from './module-util';
 
 
 const catalog = angular.module('catalog', [
-  'ngMaterial',
-  'ngFileUpload'
+  'ngMaterial'
 ]);
 
-exposeControllers(grokker, controllers);
-exposeFactories(grokker, factories);
+exposeControllers(catalog, controllers);
+exposeFactories(catalog, factories);

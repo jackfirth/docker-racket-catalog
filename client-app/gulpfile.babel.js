@@ -1,6 +1,5 @@
 import gulp from 'gulp';
 import gutil from 'gulp-util';
-import concat from 'gulp-concat';
 
 import browserify from 'browserify';
 import babelify from 'babelify';
@@ -11,7 +10,6 @@ import R from 'ramda';
 
 const SOURCE_DIR = 'src';
 const ASSETS_DIR = 'assets';
-
 
 const assetsPath = R.concat(ASSETS_DIR);
 const sourcePath = R.concat(SOURCE_DIR);
