@@ -1,16 +1,23 @@
-<div ng-controller="PackagesCtrl as packagesCtrl">
-  <md-list layout-margin>
-    <md-list-item layout-fill layout="row" class="md-3-line" ng-repeat="item in packagesCtrl.packages">
-      <div flex="20" flex-offset="10" class="md-list-item-text">
-        <h3 class="md-headline">{{ item.name }}</h1>
-        <h4 class="md-subhead">{{ item.author }}</h4>
+<md-content>
+  <div layout="column" layout-fill>
+    <md-content>
+      <div ng-controller="PackagesCtrl as packagesCtrl">
+        <md-list layout-margin>
+          <md-list-item layout-fill layout="row" class="md-3-line" ng-repeat="item in packagesCtrl.packages">
+            <div flex="20" flex-offset="10" class="md-list-item-text">
+              <h3 class="md-headline">{{ item.name }}</h1>
+              <h4 class="md-subhead">{{ item.author }}</h4>
+            </div>
+            <div flex="30" class="md-list-item-text">
+              <p class="md-body-2">{{ item.description }}</p>
+            </div>
+            <div flex="40" class="md-list-item-text">
+              <md-button ng-repeat="tag in item.tags">{{ tag }}</md-button>
+            </div>
+          </md-list-item>
+        <md-list>
       </div>
-      <div flex="30" class="md-list-item-text">
-        <p class="md-body-2">{{ item.description }}</p>
-      </div>
-      <div flex="40" class="md-list-item-text">
-        <md-button ng-repeat="tag in item.tags">{{ tag }}</md-button>
-      </div>
-    </md-list-item>
-  <md-list>
-</div>
+      <md-divider></md-divider>
+    </md-content>
+  </div>
+</md-content>
