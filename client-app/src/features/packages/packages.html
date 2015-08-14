@@ -12,7 +12,13 @@
               <p class="md-body-2">{{ item.description }}</p>
             </div>
             <div flex="40" class="md-list-item-text">
-              <md-button ng-repeat="tag in item.tags">{{ tag }}</md-button>
+              <md-chips
+                   ng-model="item.tags"
+                   readonly="false"
+                   placeholder="Enter a tag"
+                   delete-button-label="Remove Tag"
+                   delete-hint="Press delete to remove tag"
+                   secondary-placeholder="+tag"></md-chips>
             </div>
           </md-list-item>
         <md-list>
