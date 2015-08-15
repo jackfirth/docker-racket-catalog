@@ -1,4 +1,4 @@
-import {curry, contains, map, prop} from 'ramda';
+import {curry, contains, map, prop, always} from 'ramda';
 import logError from './log-error';
 
 
@@ -17,7 +17,7 @@ const assertUnpublished = (PackagesSvc, packageDetails) => {
     .then(assertNotMember(
       `Expected package ${packageDetails.name} not to be published already`,
       packageDetails.name
-    )).thenResolve(packageDetails);
+    )).then(always(packageDetails));
 };
 
 export default (PackagesSvc) => {
