@@ -14,7 +14,7 @@ client:
 catalog:
   image: 'tutum.co/jackfirth/racket_catalog_api:latest'
   autoredeploy: true
-  command: 'racket main.rkt'
+  command: './main'
   links:
     - redis
 
