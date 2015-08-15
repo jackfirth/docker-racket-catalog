@@ -8,6 +8,7 @@ dependencies:
 
 test:
   override:
+    - docker-compose build
     - docker-compose up -d catalog
     - docker-compose run test
 
