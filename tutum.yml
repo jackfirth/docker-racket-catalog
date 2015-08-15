@@ -9,6 +9,7 @@ proxy:
 
 client:
   image: 'tutum.co/jackfirth/racket_catalog_client:latest'
+  autoredeploy: true
   command: 'npm run-script build'
 
 catalog:
