@@ -1,6 +1,7 @@
 import {compose, prop, values, concat} from 'ramda';
 import readRacket from './read-racket';
 import writeRacket from './write-racket';
+import {makeRacketSymbol} from './racket-symbol';
 import logError from './log-error';
 
 
@@ -19,9 +20,18 @@ export default ($http) => {
   };
 
   const putPackageDetails = (packageDetails) => {
-    const name = packageDetails.name;
+    const {name, author, source, description} = packageDetails;
+    const symName = makeRacketSymbol('name');
+    const symAuthor = makeRacketSymbol('author');
+    const symSource = makeRacketSymbol('source');
+    const symDescription = makeRacketSymbol('description');
+    const newPackageDetails = new Map();
+    newPackageDetails.set(symName, name);
+    newPackageDetails.set(symAuthor, author);
+    newPackageDetails.set(symSource, source);
+    newPackageDetails.set(symDescription, description);
     const route = packageRoute(name);
-    return $http.put(route, writeRacket(packageDetails))
+    return $http.put(route, writeRacket(newPackageDetails))
       .then(readPackageDetailsResponse)
       .catch(logPackageSvcError);
   };
