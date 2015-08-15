@@ -5,7 +5,7 @@ import ToolbarConfig from './toolbar/toolbar-config';
 export default {
   controllers: {
     PackagesCtrl: ['PackagesSvc', PackagesCtrl],
-    PublishCtrl: [PublishCtrl]
+    PublishCtrl: ['PublishSvc', PublishCtrl]
   },
   configs: {
     ToolbarConfig: ['$stateProvider', '$urlRouterProvider', ToolbarConfig]
