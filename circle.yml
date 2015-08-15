@@ -15,7 +15,8 @@ deployment:
   production:
     branch: master
     commands:
-      - echo $TUTUM_REGISTRY_USER
       - docker login --username="$TUTUM_REGISTRY_USER" --email="$TUTUM_REGISTRY_EMAIL" --password="$TUTUM_REGISTRY_PASSWORD" tutum.co
-      - docker tag dockerracketcatalog_catalog tutum.co/jackfirth/racket_catalog
-      - docker push tutum.co/jackfirth/racket_catalog
+      - docker tag dockerracketcatalog_catalog tutum.co/jackfirth/racket_catalog_api
+      - docker push tutum.co/jackfirth/racket_catalog_api
+      - docker tag dockerracketcatalog_client tutum.co/jackfirth/racket_catalog_client
+      - docker push tutum.co/jackfirth/racket_catalog_client

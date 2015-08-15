@@ -1,10 +1,21 @@
+proxy:
+  image: tgolson/nginx-spa
+  ports:
+    - "8080:8080"
+  volumes_from:
+    - client
+  links:
+    - "catalog:api"
+
+client:
+  build: 'tutum.co/jackfirth/racket_catalog_client:latest'
+
 catalog:
-  image: 'tutum.co/jackfirth/racket_catalog:latest'
+  image: 'tutum.co/jackfirth/racket_catalog_api:latest'
   autoredeploy: true
   command: 'racket main.rkt'
   links:
     - redis
-  ports:
-    - '8000:8000'
+
 redis:
   image: 'redis:latest'
