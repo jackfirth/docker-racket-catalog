@@ -1,8 +1,9 @@
-import {compose, prop, values, concat} from 'ramda';
+import {compose, prop, values, concat, map} from 'ramda';
 import readRacket from './read-racket';
 import {writeRacket} from './write-racket';
 import {makeRacketSymbol} from './racket-symbol';
 import logError from './log-error';
+import {ensureTransientPackageProperties} from './package-props';
 
 
 const logPackageSvcError = logError('PackageSvc');
@@ -16,6 +17,7 @@ export default ($http) => {
   const getPackages = () => {
     return $http.get(API_ROUTE_ALL_PACKAGE_DETAILS)
       .then(readPackagesResponse)
+      .then(map(ensureTransientPackageProperties))
       .catch(logPackageSvcError);
   };
 

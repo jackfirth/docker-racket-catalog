@@ -22,7 +22,6 @@ test:
   build: ./integration-test
   links:
     - catalog
-  command: raco test main.rkt
 
 redis:
   image: redis
