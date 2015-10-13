@@ -1,6 +1,6 @@
 import {compose, prop, values, concat} from 'ramda';
 import readRacket from './read-racket';
-import writeRacket from './write-racket';
+import {writeRacket} from './write-racket';
 import {makeRacketSymbol} from './racket-symbol';
 import logError from './log-error';
 

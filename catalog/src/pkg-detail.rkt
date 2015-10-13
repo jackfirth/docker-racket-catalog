@@ -21,11 +21,10 @@
 
 (: required-keys (Listof Symbol))
 (define required-keys
-  '(source checksum name author))
+  '(source name author))
 
 (define (pkg-detail? v)
   (and (hash? v)
-       (hash-eq? v)
        (hash-has-keys? required-keys v)))
 
 (define-type PackageDetail (HashTable Symbol Any))
@@ -37,13 +36,10 @@
 
 (module+ test
   (check-true (pkg-detail? #hasheq((source . "path/to/foo")
-                                   (checksum . 0)
                                    (name . "foo")
                                    (author . "foo@bar"))))
   (check-true (pkg-detail? #hasheq((source . "path/to/foo")
-                                   (checksum . 0)
                                    (name . "foo")
                                    (author . "foo@bar")
                                    (extra . "blah"))))
-  (check-false (pkg-detail? #hasheq((source . "path/to/foo")
-                                   (checksum . 0)))))
+  (check-false (pkg-detail? #hasheq((source . "path/to/foo")))))
